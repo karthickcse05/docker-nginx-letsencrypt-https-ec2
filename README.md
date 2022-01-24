@@ -6,11 +6,11 @@ Below is a basic setup guide:
 
 **Step-2:** You can change the nginx version in `docker/nginx.Dockerfile`
 
-**Step-3:** Open `docker-compose-le.yaml` and replace `karthickcse05@gmail.com` and `test.karthickcse05demo.xyz`
+**Step-3:** Open `docker-compose-cert.yaml` and replace `karthickcse05@gmail.com` and `test.karthickcse05demo.xyz`
 
 **Step-4:** In a terminal (T1) run `docker-compose up --build nginx` monitor the logs for errors as we follow next steps
 
-**Step-5:** In another terminal (T2) run `docker-compose -f docker-compose-le.yaml up --build`
+**Step-5:** In another terminal (T2) run `docker-compose -f docker-compose-cert.yaml up --build`
 
 **Step-6:** If things go well, the second terminal (T2) will show something like this
 ```Successfully received certificate.
@@ -56,11 +56,11 @@ ssl_certificate /etc/letsencrypt/live/test.karthickcse05demo.xyz/fullchain.pem;
 SSL certificates should be installed. Verify by visiting your domain. You will get an Nginx 404 but it will be served over https. Check the certificate details.
 
 **Step-9:** Setup crontab for auto-renew by running command `crontab -e` and then pasting the below stuff there. Make sure you put the absolute path to the `docker-compose` file.
-```0 0 * * 0 expr `date +\%W` \% 2 > /dev/null || docker-compose -f <absolute path to folder>/docker-compose-le.yaml up && docker exec -it nginx-service nginx -s reload ```
+```0 0 * * 0 expr `date +\%W` \% 2 > /dev/null || docker-compose -f <absolute path to folder>/docker-compose-cert.yaml up && docker exec -it nginx-service nginx -s reload ```
 
 The cron job should do two things:
 
 1. Run the letsencrypt certbot container.
-        docker-compose -f <absolute path to folder>/docker-compose-le.yaml up
+        docker-compose -f <absolute path to folder>/docker-compose-cert.yaml up
 2. Tell nginx server to reload newly installed certificates
         docker exec -it nginx-service nginx -s reload
